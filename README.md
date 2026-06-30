@@ -6,10 +6,14 @@ A hands-on codebase for learning, practicing, and building stateful Agentic AI w
 
 ## 📂 Repository Structure
 
-- `Sequential Workflows/` - Practice with sequential node execution, basic state flows, and deterministic graphs.
-  - [`app.py`](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Sequential%20Workflows/app.py) - A simple state-based BMI calculator graph.
-  - `graph.png` - Visual representation of the compiled BMI workflow.
-- `requirements.txt` - Python dependencies for LangChain, LangGraph, and various LLM integrations.
+### 🔄 [Sequential Workflows](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Sequential%20Workflows)
+Practice with sequential node execution, basic state flows, and deterministic graphs.
+- [1_bmi_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Sequential%20Workflows/1_bmi_workflow.py) - A state-based BMI calculator graph. Computes the BMI of a person based on height and weight, categorizes it, and saves a visualization of the graph flow.
+- [2_llm_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Sequential%20Workflows/2_llm_workflow.py) - A basic LLM node connection workflow using `ChatMistralAI` to prompt and query the LLM sequentially.
+- [3_prompt_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Sequential%20Workflows/3_prompt_workflow.py) - A multi-step sequential content generation graph. First outlines a topic, then generates full content based on the outline using `ChatMistralAI`.
+
+### 🔀 [Parallel Workflows](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Parallel%20Workflows)
+*(Planned)* Practice with parallel branch executions, map-reduce operations, and fan-in/fan-out patterns.
 
 ---
 
@@ -32,8 +36,11 @@ uv pip install -r requirements.txt
 
 ### 2. Configure Environment Variables
 
-Create a `.env` file in the root directory to store your API keys safely:
+Create a [.env](file:///Users/shlokbam/Documents/Code/Agnetic_AI/.env) file in the root directory to store your API keys safely:
 ```env
+# Mistral AI API key (used in the LLM workflows)
+MISTRAL_API_KEY="your-mistral-api-key-here"
+
 # Google Gemini API key (if using langchain-google-genai)
 GEMINI_API_KEY="your-gemini-api-key-here"
 
