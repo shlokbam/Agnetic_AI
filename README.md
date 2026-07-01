@@ -13,7 +13,9 @@ Practice with sequential node execution, basic state flows, and deterministic gr
 - [3_prompt_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Sequential%20Workflows/3_prompt_workflow.py) - A multi-step sequential content generation graph. First outlines a topic, then generates full content based on the outline using `ChatMistralAI`.
 
 ### 🔀 [Parallel Workflows](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Parallel%20Workflows)
-*(Planned)* Practice with parallel branch executions, map-reduce operations, and fan-in/fan-out patterns.
+Practice with parallel branch executions, map-reduce operations, and fan-in/fan-out patterns.
+- [1_batsman_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Parallel%20Workflows/1_batsman_workflow.py) - A parallel batsman stats calculator graph. Computes strike rate, balls per boundary, and boundary percentage in parallel branches and merges them into a final summary.
+- [2_UPSC_essay_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Parallel%20Workflows/2_UPSC_essay_workflow.py) - A parallel essay evaluation workflow. Evaluates language quality, depth of analysis, and clarity of thought concurrently using structured outputs (Pydantic), fanning in to aggregate individual scores and compile a summarized feedback report.
 
 ---
 
