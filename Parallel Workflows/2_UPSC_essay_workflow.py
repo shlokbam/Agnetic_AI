@@ -11,14 +11,12 @@ load_dotenv()
 model = ChatMistralAI(model="mistral-small-latest", verbose=True)
 
 class EvaluationSchema(BaseModel):
-
     feedback: str = Field(description='Detailed feedbackfor the essay')
     score: int = Field(description='Score out of 10', ge=0, le=10)
 
 structured_model = model.with_structured_output(EvaluationSchema)
 
 class UPSCState(TypedDict):
-
     essay: str
     language_feedback: str
     analysis_feedback: str

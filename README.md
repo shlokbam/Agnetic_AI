@@ -17,6 +17,11 @@ Practice with parallel branch executions, map-reduce operations, and fan-in/fan-
 - [1_batsman_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Parallel%20Workflows/1_batsman_workflow.py) - A parallel batsman stats calculator graph. Computes strike rate, balls per boundary, and boundary percentage in parallel branches and merges them into a final summary.
 - [2_UPSC_essay_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Parallel%20Workflows/2_UPSC_essay_workflow.py) - A parallel essay evaluation workflow. Evaluates language quality, depth of analysis, and clarity of thought concurrently using structured outputs (Pydantic), fanning in to aggregate individual scores and compile a summarized feedback report.
 
+### 🌿 [Conditional Workflows](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Conditional%20Workflows)
+Practice with conditional routing, dynamic node transitions, and branching logic.
+- [1_quadratic_equation_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Conditional%20Workflows/1_quadratic_equation_workflow.py) - A conditional routing state graph that solves quadratic equations. Calculates the discriminant and uses conditional edges to route the state to calculate real roots, repeating roots, or identify no real roots.
+- [2_review_reply_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Conditional%20Workflows/2_review_reply_workflow.py) - A conditional review processing workflow. Classifies review sentiment using structured output. Routes positive reviews directly to a warm thank-you generator node, and routes negative reviews through an issue diagnosis node (determining issue type, tone, and urgency) before generating an empathetic resolution support reply.
+
 ---
 
 ## 🛠️ Getting Started
