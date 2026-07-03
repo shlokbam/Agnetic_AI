@@ -22,6 +22,10 @@ Practice with conditional routing, dynamic node transitions, and branching logic
 - [1_quadratic_equation_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Conditional%20Workflows/1_quadratic_equation_workflow.py) - A conditional routing state graph that solves quadratic equations. Calculates the discriminant and uses conditional edges to route the state to calculate real roots, repeating roots, or identify no real roots.
 - [2_review_reply_workflow.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/Conditional%20Workflows/2_review_reply_workflow.py) - A conditional review processing workflow. Classifies review sentiment using structured output. Routes positive reviews directly to a warm thank-you generator node, and routes negative reviews through an issue diagnosis node (determining issue type, tone, and urgency) before generating an empathetic resolution support reply.
 
+### 🔁 [Iterative Workflows](file:///Users/shlokbam/Documents/Code/Agnetic_AI/%20Iterative%20Workflows)
+Practice with loop-based state machines, feedback loops, self-correction, and human-in-the-loop patterns.
+- [1_X_post_generator.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/%20Iterative%20Workflows/1_X_post_generator.py) - An iterative Twitter/X post generator workflow. Generates a humorous tweet, critiques/evaluates it using structured output (evaluating humor, punchiness, virality, format, and originality), and loops back to optimize the draft based on the feedback until it is approved or hits the maximum iteration limit.
+
 ---
 
 ## 🛠️ Getting Started
