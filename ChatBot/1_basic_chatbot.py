@@ -19,17 +19,21 @@ def chat_node(state: ChatState):
     response = llm.invoke(messages)
     return {'messages': [response]}
 
+checkpointer = MemorySaver()
+
 graph = StateGraph(ChatState)
 
 graph.add_node('chat_node', chat_node)
 graph.add_edge(START, 'chat_node')
 graph.add_edge('chat_node', END)
 
-chatbot = graph.compile()
+chatbot = graph.compile(checkpointer=checkpointer)
+
+config = {"configurable": {"thread_id": "1"}}
 
 intial_state = {'messages': [HumanMessage(content="What is the square root of 16?")]}
 
-result = chatbot.invoke(intial_state)
+result = chatbot.invoke(intial_state, config=config)
 print(f"AI: {result['messages'][-1].content}")
 
 while True:
@@ -37,6 +41,7 @@ while True:
     print(f"User: {user_messages}")
     if user_messages.strip().lower() == "exit":
         break
+    
     intial_state = {'messages': [HumanMessage(content=user_messages)]}
-    result = chatbot.invoke(intial_state)
+    result = chatbot.invoke(intial_state, config=config)
     print(f"AI: {result['messages'][-1].content}")
