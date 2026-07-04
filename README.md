@@ -26,6 +26,10 @@ Practice with conditional routing, dynamic node transitions, and branching logic
 Practice with loop-based state machines, feedback loops, self-correction, and human-in-the-loop patterns.
 - [1_X_post_generator.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/%20Iterative%20Workflows/1_X_post_generator.py) - An iterative Twitter/X post generator workflow. Generates a humorous tweet, critiques/evaluates it using structured output (evaluating humor, punchiness, virality, format, and originality), and loops back to optimize the draft based on the feedback until it is approved or hits the maximum iteration limit.
 
+### 💬 [ChatBots](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot)
+Practice building conversational interfaces, managing message histories, and stateful chat loops.
+- [1_basic_chatbot.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/1_basic_chatbot.py) - A basic chatbot graph that uses `ChatMistralAI` and LangGraph's `add_messages` state annotation to maintain conversation state. Includes an interactive terminal loop to chat with the model.
+
 ---
 
 ## 🛠️ Getting Started
