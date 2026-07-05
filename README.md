@@ -28,7 +28,16 @@ Practice with loop-based state machines, feedback loops, self-correction, and hu
 
 ### 💬 [ChatBots](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot)
 Practice building conversational interfaces, managing message histories, and stateful chat loops.
-- [1_basic_chatbot.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/1_basic_chatbot.py) - A stateful chatbot graph that uses `ChatMistralAI`, LangGraph's `add_messages` state annotation, and a memory checkpointer (`MemorySaver`) to persist conversational memory across multiple turns under a configured `thread_id` session. Includes an interactive terminal loop to chat with the model.
+
+#### 🤖 [Langgraph_ChatBot](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot)
+- [1_basic_chatbot.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/1_basic_chatbot.py) - A stateful chatbot graph that uses `ChatMistralAI`, LangGraph's `add_messages` state annotation, and a memory checkpointer (`MemorySaver`) to persist conversational memory across multiple turns under a configured `thread_id` session. Includes an interactive terminal loop to chat with the model.
+- [app.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/app.py) - A Streamlit-based web application providing a premium frontend interface for the basic chatbot, visualizing the active graph node execution (`START` -> `chat_node` -> `END`) and state persistence live in the UI.
+- [README.md](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/README.md) - Local directory documentation and running instructions.
+- [requirements.txt](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/requirements.txt) - Localized dependencies.
+
+#### Other Persistence Examples:
+- [2_persistence.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/2_persistence.py) - A joke generation and explanation workflow demonstrating LangGraph state persistence. Compiles a state graph with an `InMemorySaver` checkpointer, executes the graph with unique `thread_id` configurations, and prints the session's active state (`get_state`) and full checkpoint history (`get_state_history`).
+- [3_Fault_Tolerance.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/3_Fault_Tolerance.py) - A fault tolerance demonstration showing how LangGraph automatically recovers state after a crash. Simulates a crash (via `KeyboardInterrupt`) during the execution of a multi-node workflow and resumes execution from the last successful checkpoint upon retry.
 
 ---
 
@@ -66,6 +75,18 @@ OPENAI_API_KEY="your-openai-api-key-here"
 LANGSMITH_TRACING="true"
 LANGSMITH_API_KEY="your-langsmith-api-key"
 ```
+
+### 3. Run the Streamlit Application
+
+To launch the interactive Streamlit chatbot web interface:
+```bash
+streamlit run "ChatBot/Langgraph_ChatBot/app.py"
+```
+> [!WARNING]
+> Do NOT run `python app.py` (or `python ChatBot/Langgraph_ChatBot/app.py`) directly. Streamlit applications must be started using the `streamlit run` command so that they initialize the correct script execution context.
+
+Once started, the application will be hosted at `http://localhost:8501`.
+
 
 ---
 
