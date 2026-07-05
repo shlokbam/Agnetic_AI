@@ -1,12 +1,13 @@
 import os
 import time
 import uuid
+import sqlite3
 import streamlit as st
 from dotenv import load_dotenv
 from typing import TypedDict, Annotated
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
-from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.sqlite import SqliteSaver
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_mistralai import ChatMistralAI
 
@@ -17,11 +18,43 @@ load_dotenv()
 class ChatState(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
 
+# Fetch existing thread IDs from SQLite database
+def get_existing_threads():
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "chatbot_history.db")
+    if not os.path.exists(db_path):
+        return []
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT thread_id FROM checkpoints")
+        threads = [row[0] for row in cursor.fetchall() if row[0]]
+        conn.close()
+        return sorted(threads)
+    except Exception:
+        return []
+
+# Delete a specific thread and its checkpoints/writes from the database
+def delete_thread_from_db(thread_id: str):
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "chatbot_history.db")
+    if not os.path.exists(db_path):
+        return
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM checkpoints WHERE thread_id = ?", (thread_id,))
+        cursor.execute("DELETE FROM writes WHERE thread_id = ?", (thread_id,))
+        conn.commit()
+        conn.close()
+    except Exception:
+        pass
+
 # Cache the compilation of the LangGraph workflow to prevent re-compilation on every rerun
 @st.cache_resource
 def get_chatbot(model_name: str):
-    # Initialize the memory checkpointer
-    checkpointer = MemorySaver()
+    # Initialize the SQLite checkpointer
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "chatbot_history.db")
+    conn = sqlite3.connect(db_path, check_same_thread=False)
+    checkpointer = SqliteSaver(conn)
     
     # Initialize the LLM
     llm = ChatMistralAI(model=model_name, api_key=os.getenv("MISTRAL_API_KEY"))
@@ -84,7 +117,6 @@ st.markdown("""
     .dot-pending { background-color: #64748b; }
     .dot-running { background-color: #3b82f6; box-shadow: 0 0 8px #3b82f6; animation: pulse 1.5s infinite; }
     .dot-success { background-color: #10b981; }
-    
     @keyframes pulse {
         0% { opacity: 0.6; }
         50% { opacity: 1; }
@@ -100,29 +132,68 @@ st.markdown("A premium conversational interface demonstrating state preservation
 # --- Session State Initialization ---
 if "active_node" not in st.session_state:
     st.session_state.active_node = None
-if "reset_counter" not in st.session_state:
-    st.session_state.reset_counter = 0
+if "selected_session" not in st.session_state:
+    st.session_state.selected_session = "🆕 Create New Session"
+if "new_session_name" not in st.session_state:
+    st.session_state.new_session_name = f"session-{uuid.uuid4().hex[:4]}"
 
-# --- Sidebar Configuration ---
-st.sidebar.title("⚙️ Configuration")
+# --- Sidebar Title ---
+st.sidebar.title("🤖 Chat Controls")
 
-# Model Selection
-model_options = ["mistral-small-latest", "mistral-medium-latest", "mistral-large-latest"]
-selected_model = st.sidebar.selectbox("Mistral Model Selection", options=model_options, index=1)
+# Hardcoded Model Selection
+selected_model = "mistral-medium-latest"
 
 # Compile chatbot graph based on model selection
 chatbot = get_chatbot(selected_model)
 
-# Session / Thread Management
-st.sidebar.subheader("💬 Session Management")
-base_thread_id = st.sidebar.text_input("Thread ID (Conversational Persistence)", value="thread-default")
-current_thread_id = f"{base_thread_id}_{st.session_state.reset_counter}"
+# --- Sidebar Saved Sessions ---
+st.sidebar.subheader("📁 Saved Sessions")
 
-# Clear current thread session button
-if st.sidebar.button("Clear Chat Session", use_container_width=True):
-    st.session_state.reset_counter += 1
-    st.session_state.active_node = None
-    st.rerun()
+# Fetch unique thread IDs from SQLite db to populate scrollbar list
+existing_threads = get_existing_threads()
+
+# Scrollable container for sessions list (inside sidebar, height set to 300)
+with st.sidebar.container(height=300):
+    # "Create New Session" Option
+    is_new_active = (st.session_state.selected_session == "🆕 Create New Session")
+    if st.button("➕ New Session", use_container_width=True, type="primary" if is_new_active else "secondary"):
+        st.session_state.selected_session = "🆕 Create New Session"
+        # Generate a new unique ID so the user starts with a completely fresh, empty chat
+        st.session_state.new_session_name = f"session-{uuid.uuid4().hex[:4]}"
+        st.session_state.active_node = None
+        st.rerun()
+        
+    st.markdown("<div style='margin: 8px 0; border-top: 1px dashed #475569;'></div>", unsafe_allow_html=True)
+    
+    # List all saved sessions with a side delete button
+    for session in existing_threads:
+        is_active = (st.session_state.selected_session == session)
+        
+        # Grid columns inside sidebar for thread buttons and delete button
+        row_col1, row_col2 = st.columns([4, 1.2])
+        with row_col1:
+            btn_label = f"💬 {session}"
+            if is_active:
+                btn_label = f"👉 {session}"
+            if st.button(btn_label, key=f"session_btn_{session}", use_container_width=True, type="primary" if is_active else "secondary"):
+                st.session_state.selected_session = session
+                st.session_state.active_node = None
+                st.rerun()
+        with row_col2:
+            if st.button("🗑️", key=f"del_{session}", use_container_width=True, help=f"Delete thread {session}"):
+                delete_thread_from_db(session)
+                if st.session_state.selected_session == session:
+                    st.session_state.selected_session = "🆕 Create New Session"
+                    st.session_state.new_session_name = f"session-{uuid.uuid4().hex[:4]}"
+                    st.session_state.active_node = None
+                st.rerun()
+            
+if st.session_state.selected_session == "🆕 Create New Session":
+    base_thread_id = st.sidebar.text_input("Enter Session ID", value=st.session_state.new_session_name)
+    current_thread_id = base_thread_id
+else:
+    current_thread_id = st.session_state.selected_session
+    st.sidebar.info(f"Resuming: `{current_thread_id}`")
 
 # --- Live Workflow Execution Render Helper ---
 st.sidebar.subheader("⚙️ Workflow Execution")
@@ -179,7 +250,7 @@ if prompt := st.chat_input("Ask a question..."):
     with st.chat_message("user"):
         st.write(prompt)
         
-    # Setup placeholder for dynamic LLM response and status updates
+    # Setup placeholder for dynamic LLM response
     with st.chat_message("assistant"):
         response_placeholder = st.empty()
 
@@ -193,24 +264,28 @@ if prompt := st.chat_input("Ask a question..."):
     render_workflow_status("chat_node")
     response_placeholder.markdown("*Thinking...*")
 
-    # Invoke chatbot graph execution
+    # Invoke chatbot graph execution with messages stream mode
     input_messages = {"messages": [HumanMessage(content=prompt)]}
     
-    # We execute and capture the response
+    # We execute and capture the response chunks in real-time
     try:
-        result = chatbot.invoke(input_messages, config=config)
-        response_text = result["messages"][-1].content
+        displayed_text = ""
+        # stream_mode="messages" streams token chunks from the Chat model
+        for chunk, metadata in chatbot.stream(input_messages, config=config, stream_mode="messages"):
+            # Dynamically update the active node in the workflow visualizer
+            node = metadata.get("langgraph_node")
+            if node and st.session_state.active_node != node:
+                st.session_state.active_node = node
+                render_workflow_status(node)
+            
+            if chunk.content:
+                displayed_text += chunk.content
+                # Update response
+                response_placeholder.markdown(displayed_text + "▌")
         
         # Step 3: END reached
         st.session_state.active_node = "END"
         render_workflow_status("END")
-        
-        # Typing/streaming animation for the response
-        displayed_text = ""
-        for char in response_text:
-            displayed_text += char
-            response_placeholder.markdown(displayed_text + "▌")
-            time.sleep(0.005)
         response_placeholder.markdown(displayed_text)
         
     except Exception as e:
