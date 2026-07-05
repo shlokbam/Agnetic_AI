@@ -28,7 +28,7 @@ Practice with loop-based state machines, feedback loops, self-correction, and hu
 
 ### 💬 [ChatBots](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot)
 Practice building conversational interfaces, managing message histories, and stateful chat loops.
-- [1_basic_chatbot.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/1_basic_chatbot.py) - A basic chatbot graph that uses `ChatMistralAI` and LangGraph's `add_messages` state annotation to maintain conversation state. Includes an interactive terminal loop to chat with the model.
+- [1_basic_chatbot.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/1_basic_chatbot.py) - A stateful chatbot graph that uses `ChatMistralAI`, LangGraph's `add_messages` state annotation, and a memory checkpointer (`MemorySaver`) to persist conversational memory across multiple turns under a configured `thread_id` session. Includes an interactive terminal loop to chat with the model.
 
 ---
 

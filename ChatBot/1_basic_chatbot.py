@@ -31,10 +31,10 @@ chatbot = graph.compile(checkpointer=checkpointer)
 
 config = {"configurable": {"thread_id": "1"}}
 
-intial_state = {'messages': [HumanMessage(content="What is the square root of 16?")]}
+# intial_state = {'messages': [HumanMessage(content="What is the square root of 16?")]}
 
-result = chatbot.invoke(intial_state, config=config)
-print(f"AI: {result['messages'][-1].content}")
+# result = chatbot.invoke(intial_state, config=config)
+# print(f"AI: {result['messages'][-1].content}")
 
 while True:
     user_messages = input("Type here: ")
