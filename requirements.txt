@@ -77,3 +77,16 @@ xxhash==3.5.0
 zstandard==0.23.0
 ipython
 langchain-mistralai
+langchain-community
+pypdf
+faiss-cpu
+ddgs
+langsmith
+langchain
+langchain-core
+langchain-openai
+langchain-community
+langgraph
+pypdf
+faiss-cpu
+python-dotenv

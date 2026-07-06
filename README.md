@@ -30,8 +30,9 @@ Practice with loop-based state machines, feedback loops, self-correction, and hu
 Practice building conversational interfaces, managing message histories, and stateful chat loops.
 
 #### 🤖 [Langgraph_ChatBot](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot)
-- [1_basic_chatbot.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/1_basic_chatbot.py) - A stateful chatbot graph that uses `ChatMistralAI`, LangGraph's `add_messages` state annotation, and a memory checkpointer (`MemorySaver`) to persist conversational memory across multiple turns under a configured `thread_id` session. Includes an interactive terminal loop to chat with the model.
-- [app.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/app.py) - A Streamlit-based web application providing a premium frontend interface for the basic chatbot, visualizing the active graph node execution (`START` -> `chat_node` -> `END`) and state persistence live in the UI.
+- [1_basic_chatbot.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/1_basic_chatbot.py) - An interactive, stateful ReAct chatbot that supports persistent SQLite checkpointers. Automatically executes a tool-calling feedback loop (`duckduckgo_search`, `calculator`, `get_stock_price`) and outputs execution status directly to the CLI console.
+- [app.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/app.py) - A premium web application built with Streamlit providing a visual chat canvas. Renders live execution workflow indicators (`START` -> `chat` -> `tools` -> `chat` -> `END`), visual tool call/output info cards, session controls (saving/resuming threads, deleting threads), and a built-in virtual environment warning check.
+- [tool.py](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/tool.py) - Helper tool script for validating tool functionality.
 - [README.md](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/README.md) - Local directory documentation and running instructions.
 - [requirements.txt](file:///Users/shlokbam/Documents/Code/Agnetic_AI/ChatBot/Langgraph_ChatBot/requirements.txt) - Localized dependencies.
 
@@ -45,17 +46,19 @@ Practice building conversational interfaces, managing message histories, and sta
 
 ### 1. Prerequisites & Environment Setup
 
-This repository uses [uv](https://github.com/astral-sh/uv) (a fast Python package installer and resolver) to manage environments. 
+This repository uses a local virtual environment to manage package versions. 
 
-To set up the virtual environment:
+To activate the environment:
 ```bash
-# Create and activate virtual environment
-uv venv
+# Create the environment if you haven't already
+python -m venv .venv
+
+# Activate virtual environment
 source .venv/bin/activate  # On macOS/Linux
 # Or: .venv\Scripts\activate on Windows
 
-# Install the dependencies
-uv pip install -r requirements.txt
+# Install/Update dependencies in virtual environment
+pip install -r requirements.txt
 ```
 
 ### 2. Configure Environment Variables
@@ -76,23 +79,20 @@ LANGSMITH_TRACING="true"
 LANGSMITH_API_KEY="your-langsmith-api-key"
 ```
 
-### 3. Run the Streamlit Application
+### 3. Run the Chatbot Interfaces
 
-To launch the interactive Streamlit chatbot web interface:
+#### Start the Streamlit Web App:
+Run the Streamlit app using the virtual environment's execution path to prevent python version mismatches:
 ```bash
-streamlit run "ChatBot/Langgraph_ChatBot/app.py"
+.venv/bin/streamlit run ChatBot/Langgraph_ChatBot/app.py
 ```
-> [!WARNING]
-> Do NOT run `python app.py` (or `python ChatBot/Langgraph_ChatBot/app.py`) directly. Streamlit applications must be started using the `streamlit run` command so that they initialize the correct script execution context.
-
 Once started, the application will be hosted at `http://localhost:8501`.
 
+#### Start the CLI Chatbot:
+```bash
+python ChatBot/Langgraph_ChatBot/1_basic_chatbot.py
+```
 
 ---
 
 Happy learning! 🚀
-
-
-
-
-

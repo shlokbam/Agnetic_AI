@@ -4,3 +4,5 @@ langchain-core
 langchain-mistralai
 python-dotenv
 langgraph-checkpoint-sqlite
+langsmith
+ddgs
