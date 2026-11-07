@@ -20,7 +20,7 @@ One small, runnable example for each core LangGraph pattern, from a plain sequen
 | [Sequential](Sequential%20Workflows) | A BMI calculator graph, a single LLM node, and an outline → write content chain |
 | [Parallel](Parallel%20Workflows) | Batsman stats computed in parallel branches, and an essay graded on several criteria at once, then merged |
 | [Conditional](Conditional%20Workflows) | A quadratic solver that routes on the discriminant, and a review classifier that routes by sentiment |
-| [Iterative](%20Iterative%20Workflows) | An X-post generator that drafts, gets critiqued and rewrites until approved |
+| [Iterative](%20Iterative%20Workflows) | An X-post generator that drafts, gets critiqued and rewrites until approved or an iteration cap is hit |
 | [Chatbot](ChatBot) | A ReAct chatbot with tools and SQLite checkpoints, a Streamlit UI, state persistence and fault-tolerant resume |
 
 ## Demo
